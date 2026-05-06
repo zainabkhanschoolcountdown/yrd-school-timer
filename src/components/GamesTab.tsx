@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-type GameId = "menu" | "among-us" | "parkour";
+type GameId = "menu" | "among-us" | "parkour" | "four-colors" | "geometry-dash";
 
 const GAMES = [
   {
@@ -16,6 +16,20 @@ const GAMES = [
     emoji: "🏃",
     desc: "Run, jump & flip through parkour levels!",
     url: "https://html5.gamedistribution.com/d62e52e09f574651b3b0e984846de630/",
+  },
+  {
+    id: "four-colors" as const,
+    name: "Four Colors",
+    emoji: "🃏",
+    desc: "Classic UNO-style card game!",
+    url: "https://html5.gamedistribution.com/bff8a5baf96043809f001ea89c129a4b/",
+  },
+  {
+    id: "geometry-dash" as const,
+    name: "Geometry Dash",
+    emoji: "🔷",
+    desc: "Jump to the beat & dodge obstacles!",
+    url: "https://html5.gamedistribution.com/8b65f47d53a6406c8bc767cd1a16a2ec/",
   },
 ];
 
