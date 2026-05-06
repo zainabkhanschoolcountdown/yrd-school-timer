@@ -143,14 +143,14 @@
 }
 
 @theme inline {
-  --color-sunny: var(--color-sunny);
-  --color-sky: var(--color-sky);
-  --color-coral: var(--color-coral);
-  --color-mint: var(--color-mint);
-  --color-lavender: var(--color-lavender);
-  --color-school-day: var(--color-school-day);
-  --color-weekend: var(--color-weekend);
-  --color-holiday: var(--color-holiday);
+  --color-sunny: oklch(0.85 0.17 85);
+  --color-sky: oklch(0.7 0.15 230);
+  --color-coral: oklch(0.7 0.18 25);
+  --color-mint: oklch(0.85 0.12 165);
+  --color-lavender: oklch(0.82 0.1 290);
+  --color-school-day: oklch(0.65 0.2 145);
+  --color-weekend: oklch(0.92 0.03 90);
+  --color-holiday: oklch(0.7 0.18 25);
 }
 
 @layer base {
