@@ -5,6 +5,7 @@ import { CountdownDisplay } from "@/components/CountdownDisplay";
 import { CalendarView } from "@/components/CalendarView";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { CreatorPanel } from "@/components/CreatorPanel";
+import { GamesTab } from "@/components/GamesTab";
 import { Crown } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type Tab = "countdown" | "calendar" | "settings" | "creator";
+type Tab = "countdown" | "calendar" | "games" | "settings" | "creator";
 
 function Index() {
   const store = useSchoolStore();
@@ -26,6 +27,7 @@ function Index() {
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: "countdown", label: "Countdown", icon: "⏳" },
     { id: "calendar", label: "Calendar", icon: "📅" },
+    { id: "games", label: "Games", icon: "🎮" },
     { id: "settings", label: "Settings", icon: "⚙️" },
   ];
 
@@ -97,6 +99,7 @@ function Index() {
               endDate={store.endDate}
             />
           )}
+          {tab === "games" && <GamesTab />}
           {tab === "settings" && (
             <SettingsPanel
               name={store.settings.name}
