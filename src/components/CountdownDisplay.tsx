@@ -33,7 +33,7 @@ export function CountdownDisplay({
   }, [daysRemaining]);
 
   const greeting = name
-    ? `Only ${daysRemaining} days left, ${name}! 🎉`
+    ? `Only ${daysRemaining} days left, ${name}! 🎉${name.toLowerCase() === "mountfuji" ? " 👑" : ""}`
     : `Only ${daysRemaining} school days left! 🎉`;
 
   const emoji = daysRemaining <= 5 ? "🥳" : daysRemaining <= 10 ? "🎊" : daysRemaining <= 30 ? "😄" : "📚";
