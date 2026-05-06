@@ -1,35 +1,61 @@
 import { useState } from "react";
-import { AmongUsGame } from "./AmongUsGame";
-import { StickmanParkourGame } from "./StickmanParkourGame";
 
 type GameId = "menu" | "among-us" | "parkour";
 
 const GAMES = [
-  { id: "among-us" as const, name: "Among Us Mini", emoji: "🚀", desc: "Complete tasks & dodge the impostor!" },
-  { id: "parkour" as const, name: "Stickman Parkour", emoji: "🏃", desc: "Jump, run & collect coins!" },
+  {
+    id: "among-us" as const,
+    name: "Impostor (Among Us)",
+    emoji: "🚀",
+    desc: "Play the classic impostor game online!",
+    url: "https://html5.gamedistribution.com/rvvASMiM/9abe6af0fbb440b98a3e24bf7fb0636a/index.html",
+  },
+  {
+    id: "parkour" as const,
+    name: "Stickman Parkour",
+    emoji: "🏃",
+    desc: "Run, jump & flip through parkour levels!",
+    url: "https://html5.gamedistribution.com/d62e52e09f574651b3b0e984846de630/",
+  },
 ];
 
 export function GamesTab() {
   const [active, setActive] = useState<GameId>("menu");
 
-  if (active === "among-us") {
-    return (
-      <div className="flex flex-col items-center gap-4">
-        <button onClick={() => setActive("menu")} className="self-start text-sm font-bold text-primary hover:underline">
-          ← Back to Games
-        </button>
-        <AmongUsGame />
-      </div>
-    );
-  }
+  const activeGame = GAMES.find(g => g.id === active);
 
-  if (active === "parkour") {
+  if (activeGame) {
     return (
-      <div className="flex flex-col items-center gap-4">
-        <button onClick={() => setActive("menu")} className="self-start text-sm font-bold text-primary hover:underline">
+      <div className="flex flex-col items-center gap-4 w-full">
+        <button
+          onClick={() => setActive("menu")}
+          className="self-start text-sm font-bold text-primary hover:underline"
+        >
           ← Back to Games
         </button>
-        <StickmanParkourGame />
+        <h3 className="text-xl font-extrabold text-foreground">
+          {activeGame.emoji} {activeGame.name}
+        </h3>
+        <div className="w-full rounded-2xl overflow-hidden border-2 border-white/20 shadow-lg" style={{ aspectRatio: "16/10" }}>
+          <iframe
+            src={activeGame.url}
+            title={activeGame.name}
+            className="w-full h-full border-0"
+            allow="autoplay; fullscreen; gamepad"
+            sandbox="allow-scripts allow-same-origin allow-popups"
+          />
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Game not loading?{" "}
+          <a
+            href={activeGame.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline"
+          >
+            Open in new tab
+          </a>
+        </p>
       </div>
     );
   }
