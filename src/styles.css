@@ -63,38 +63,48 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --background: oklch(0.98 0.01 90);
+  --foreground: oklch(0.25 0.05 270);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
+  --card-foreground: oklch(0.25 0.05 270);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --popover-foreground: oklch(0.25 0.05 270);
+  --primary: oklch(0.65 0.2 145);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.85 0.12 80);
+  --secondary-foreground: oklch(0.3 0.06 60);
+  --muted: oklch(0.95 0.02 90);
+  --muted-foreground: oklch(0.5 0.04 270);
+  --accent: oklch(0.7 0.18 270);
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.6 0.22 25);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.9 0.03 90);
+  --input: oklch(0.92 0.02 90);
+  --ring: oklch(0.65 0.2 145);
+  --chart-1: oklch(0.65 0.2 145);
+  --chart-2: oklch(0.7 0.18 270);
+  --chart-3: oklch(0.75 0.16 45);
+  --chart-4: oklch(0.7 0.2 200);
+  --chart-5: oklch(0.65 0.22 340);
+  --sidebar: oklch(0.97 0.01 90);
+  --sidebar-foreground: oklch(0.25 0.05 270);
+  --sidebar-primary: oklch(0.65 0.2 145);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.93 0.04 90);
+  --sidebar-accent-foreground: oklch(0.25 0.05 270);
+  --sidebar-border: oklch(0.9 0.03 90);
+  --sidebar-ring: oklch(0.65 0.2 145);
+
+  /* Custom kid-friendly tokens */
+  --color-sunny: oklch(0.85 0.17 85);
+  --color-sky: oklch(0.7 0.15 230);
+  --color-coral: oklch(0.7 0.18 25);
+  --color-mint: oklch(0.85 0.12 165);
+  --color-lavender: oklch(0.82 0.1 290);
+  --color-school-day: oklch(0.65 0.2 145);
+  --color-weekend: oklch(0.92 0.03 90);
+  --color-holiday: oklch(0.7 0.18 25);
 }
 
 .dark {
@@ -132,6 +142,17 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+@theme inline {
+  --color-sunny: var(--color-sunny);
+  --color-sky: var(--color-sky);
+  --color-coral: var(--color-coral);
+  --color-mint: var(--color-mint);
+  --color-lavender: var(--color-lavender);
+  --color-school-day: var(--color-school-day);
+  --color-weekend: var(--color-weekend);
+  --color-holiday: var(--color-holiday);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
@@ -140,5 +161,26 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  }
+}
+
+@layer base {
+  @keyframes bounce-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-3deg); }
+    75% { transform: rotate(3deg); }
+  }
+  @keyframes confetti-fall {
+    0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px oklch(0.65 0.2 145 / 0.3); }
+    50% { box-shadow: 0 0 40px oklch(0.65 0.2 145 / 0.6); }
   }
 }
