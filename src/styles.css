@@ -105,6 +105,10 @@
   --color-school-day: oklch(0.65 0.2 145);
   --color-weekend: oklch(0.92 0.03 90);
   --color-holiday: oklch(0.7 0.18 25);
+  --color-magenta-start: oklch(0.55 0.25 330);
+  --color-magenta-mid: oklch(0.6 0.28 310);
+  --color-magenta-end: oklch(0.55 0.22 290);
+  --color-creator-gold: oklch(0.8 0.16 85);
 }
 
 .dark {
@@ -159,7 +163,8 @@
   }
 
   body {
-    background-color: var(--color-background);
+    background: linear-gradient(135deg, var(--color-magenta-start), var(--color-magenta-mid), var(--color-magenta-end));
+    min-height: 100vh;
     color: var(--color-foreground);
     font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
   }
