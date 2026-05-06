@@ -233,8 +233,7 @@ export function AmongUsGame() {
       g.animId = requestAnimationFrame(loop);
     };
 
-    g.current = gameRef.current;
-    if (g.current) g.current.animId = requestAnimationFrame(loop);
+    if (gameRef.current) gameRef.current.animId = requestAnimationFrame(loop);
     return () => { if (gameRef.current) cancelAnimationFrame(gameRef.current.animId); };
   }, [status]);
 
