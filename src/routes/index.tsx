@@ -6,6 +6,7 @@ import { CalendarView } from "@/components/CalendarView";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { CreatorPanel } from "@/components/CreatorPanel";
 import { GamesTab } from "@/components/GamesTab";
+import { ChatRoom } from "@/components/ChatRoom";
 import { Crown } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type Tab = "countdown" | "calendar" | "games" | "settings" | "creator";
+type Tab = "countdown" | "calendar" | "games" | "chat" | "settings" | "creator";
 
 function Index() {
   const store = useSchoolStore();
@@ -28,6 +29,7 @@ function Index() {
     { id: "countdown", label: "Countdown", icon: "⏳" },
     { id: "calendar", label: "Calendar", icon: "📅" },
     { id: "games", label: "Games", icon: "🎮" },
+    { id: "chat", label: "Chat", icon: "💬" },
     { id: "settings", label: "Settings", icon: "⚙️" },
   ];
 
@@ -100,6 +102,7 @@ function Index() {
             />
           )}
           {tab === "games" && <GamesTab />}
+          {tab === "chat" && <ChatRoom userName={store.settings.name} />}
           {tab === "settings" && (
             <SettingsPanel
               name={store.settings.name}
