@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Count down remaining school days for YRDSB elementary schools!" },
+      { title: "School Countdown and Games" },
+      { name: "description", content: "Count down remaining school days for YRDSB elementary schools! Don't forget about playing fun games." },
       { name: "author", content: "YRDSB Countdown" },
-      { property: "og:title", content: "YRDSB School Day Countdown 🎒" },
-      { property: "og:description", content: "Count down remaining school days for YRDSB elementary schools!" },
+      { property: "og:title", content: "School Countdown and Games" },
+      { property: "og:description", content: "Count down remaining school days for YRDSB elementary schools! Don't forget about playing fun games." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "School Countdown and Games" },
+      { name: "twitter:description", content: "Count down remaining school days for YRDSB elementary schools! Don't forget about playing fun games." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/4424b45a-be93-4458-bebe-3f999d5f4107" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/4424b45a-be93-4458-bebe-3f999d5f4107" },
     ],
     links: [
       {
