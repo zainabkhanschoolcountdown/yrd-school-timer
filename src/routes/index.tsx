@@ -4,6 +4,8 @@ import { useSchoolStore } from "@/lib/use-school-store";
 import { CountdownDisplay } from "@/components/CountdownDisplay";
 import { CalendarView } from "@/components/CalendarView";
 import { SettingsPanel } from "@/components/SettingsPanel";
+import { CreatorPanel } from "@/components/CreatorPanel";
+import { Crown } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -15,7 +17,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type Tab = "countdown" | "calendar" | "settings";
+type Tab = "countdown" | "calendar" | "settings" | "creator";
 
 function Index() {
   const store = useSchoolStore();
@@ -27,21 +29,23 @@ function Index() {
     { id: "settings", label: "Settings", icon: "⚙️" },
   ];
 
+  const isCreator = store.settings.name.toLowerCase() === "mountfuji";
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="text-center pt-8 pb-4 px-4">
         <h1
           className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary via-sky to-accent bg-clip-text text-transparent"
           style={{ WebkitBackgroundClip: "text" }}
         >
-          🎒 School Day Countdown
+          🎒 School Day Countdown {isCreator && <Crown className="inline text-[var(--color-creator-gold)]" size={28} />}
         </h1>
-        <p className="text-muted-foreground mt-1 text-sm">YRDSB Elementary</p>
+        <p className="text-white/70 mt-1 text-sm">YRDSB Elementary</p>
       </header>
 
       {/* Tab bar */}
-      <nav className="flex justify-center gap-2 px-4 mb-6">
+      <nav className="flex justify-center gap-2 px-4 mb-6 flex-wrap">
         {tabs.map(t => (
           <button
             key={t.id}
@@ -56,6 +60,19 @@ function Index() {
             <span className="hidden sm:inline">{t.label}</span>
           </button>
         ))}
+        {isCreator && (
+          <button
+            onClick={() => setTab("creator")}
+            className={`flex items-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-bold transition-all ${
+              tab === "creator"
+                ? "bg-[var(--color-creator-gold)] text-amber-900 shadow-lg scale-105"
+                : "bg-white/20 text-white hover:bg-white/30"
+            }`}
+          >
+            <span>👑</span>
+            <span className="hidden sm:inline">Creator</span>
+          </button>
+        )}
       </nav>
 
       {/* Content */}
@@ -92,12 +109,14 @@ function Index() {
               onRemoveHoliday={store.removeCustomHoliday}
             />
           )}
+          {tab === "creator" && isCreator && <CreatorPanel />}
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="text-center py-4 text-xs text-muted-foreground">
-        Made with 💚 for YRDSB students
+      <footer className="text-center py-4 text-xs text-white/60 space-y-1">
+        <p>Made with 💚 for YRDSB students</p>
+        <p className="font-bold text-white/80">Created by mountfuji 🏔️</p>
       </footer>
     </div>
   );
