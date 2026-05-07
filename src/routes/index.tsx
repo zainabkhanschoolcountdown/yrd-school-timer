@@ -33,7 +33,7 @@ function Index() {
     { id: "settings", label: "Settings", icon: "⚙️" },
   ];
 
-  const isCreator = store.settings.name.toLowerCase() === "mountfuji";
+  const isCreator = store.settings.isCreator === true;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -110,6 +110,7 @@ function Index() {
               customEndDate={store.settings.customEndDate}
               soundEnabled={store.settings.soundEnabled}
               customHolidays={store.settings.customHolidays}
+              isCreator={isCreator}
               onUpdate={store.updateSettings}
               onAddHoliday={store.addCustomHoliday}
               onRemoveHoliday={store.removeCustomHoliday}
