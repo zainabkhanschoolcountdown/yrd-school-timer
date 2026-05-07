@@ -13,19 +13,20 @@ interface UserSettings {
   customEndDate: string | null;
   customHolidays: HolidayEntry[];
   soundEnabled: boolean;
+  isCreator: boolean;
 }
 
 const STORAGE_KEY = "yrdsb-countdown-settings";
 
 function loadSettings(): UserSettings {
   if (typeof window === "undefined") {
-    return { name: "", grade: "", customEndDate: null, customHolidays: [], soundEnabled: false };
+    return { name: "", grade: "", customEndDate: null, customHolidays: [], soundEnabled: false, isCreator: false };
   }
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch {}
-  return { name: "", grade: "", customEndDate: null, customHolidays: [], soundEnabled: false };
+  return { name: "", grade: "", customEndDate: null, customHolidays: [], soundEnabled: false, isCreator: false };
 }
 
 function saveSettings(settings: UserSettings) {
