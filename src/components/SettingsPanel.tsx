@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { HolidayEntry } from "@/lib/school-days";
+import { Lock, Unlock, Crown } from "lucide-react";
 
 interface SettingsPanelProps {
   name: string;
@@ -8,17 +9,37 @@ interface SettingsPanelProps {
   customEndDate: string | null;
   soundEnabled: boolean;
   customHolidays: HolidayEntry[];
-  onUpdate: (patch: { name?: string; grade?: string; customEndDate?: string | null; soundEnabled?: boolean }) => void;
+  isCreator: boolean;
+  onUpdate: (patch: { name?: string; grade?: string; customEndDate?: string | null; soundEnabled?: boolean; isCreator?: boolean }) => void;
   onAddHoliday: (entry: HolidayEntry) => void;
   onRemoveHoliday: (date: string) => void;
 }
 
 export function SettingsPanel({
-  name, grade, customEndDate, soundEnabled,
+  name, grade, customEndDate, soundEnabled, isCreator,
   customHolidays, onUpdate, onAddHoliday, onRemoveHoliday,
 }: SettingsPanelProps) {
   const [newDate, setNewDate] = useState("");
   const [newName, setNewName] = useState("");
+  const [creatorPassword, setCreatorPassword] = useState("");
+  const [creatorError, setCreatorError] = useState<string | null>(null);
+  const [creatorSuccess, setCreatorSuccess] = useState(false);
+
+  const CREATOR_PASSWORD = "986314";
+
+  const handleCreatorUnlock = () => {
+    if (creatorPassword === CREATOR_PASSWORD) {
+      onUpdate({ isCreator: true });
+      setCreatorSuccess(true);
+      setCreatorError(null);
+      setCreatorPassword("");
+      setTimeout(() => setCreatorSuccess(false), 3000);
+    } else {
+      setCreatorError("Wrong password!");
+      setCreatorSuccess(false);
+      setTimeout(() => setCreatorError(null), 3000);
+    }
+  };
 
   return (
     <div className="w-full max-w-md mx-auto space-y-6">
@@ -120,6 +141,42 @@ export function SettingsPanel({
               </li>
             ))}
           </ul>
+        )}
+      </div>
+
+      {/* Creator Mode */}
+      <div className="space-y-3">
+        <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+          <Crown size={18} className="text-amber-400" /> Creator Mode
+        </h3>
+        {isCreator ? (
+          <div className="flex items-center gap-2 text-sm text-green-400 font-medium">
+            <Unlock size={16} />
+            Creator mode is active! 👑
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">Enter the creator password to unlock special features.</p>
+            <div className="flex gap-2">
+              <input
+                type="password"
+                placeholder="Password"
+                value={creatorPassword}
+                onChange={e => setCreatorPassword(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && handleCreatorUnlock()}
+                className="flex-1 rounded-xl border bg-card px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <Button onClick={handleCreatorUnlock} className="rounded-xl">
+                <Lock size={16} />
+              </Button>
+            </div>
+            {creatorError && (
+              <p className="text-xs text-destructive font-medium">{creatorError}</p>
+            )}
+            {creatorSuccess && (
+              <p className="text-xs text-green-400 font-medium">✅ Creator mode unlocked!</p>
+            )}
+          </div>
         )}
       </div>
     </div>
