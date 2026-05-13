@@ -102,7 +102,7 @@ function Index() {
             />
           )}
           {tab === "games" && <GamesTab />}
-          {tab === "chat" && <ChatRoom userName={store.settings.name} isCreator={isCreator} />}
+          {tab === "chat" && <ChatRoom userName={store.settings.name} isCreator={isCreator} avatar={store.settings.avatar} />}
           {tab === "settings" && (
             <SettingsPanel
               name={store.settings.name}
@@ -111,6 +111,7 @@ function Index() {
               soundEnabled={store.settings.soundEnabled}
               customHolidays={store.settings.customHolidays}
               isCreator={isCreator}
+              avatar={store.settings.avatar}
               onUpdate={store.updateSettings}
               onAddHoliday={store.addCustomHoliday}
               onRemoveHoliday={store.removeCustomHoliday}

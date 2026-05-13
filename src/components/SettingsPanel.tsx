@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { HolidayEntry } from "@/lib/school-days";
 import { Lock, Unlock, Crown } from "lucide-react";
+import { AvatarBuilder } from "./AvatarBuilder";
+import { type AvatarConfig } from "@/lib/avatar";
 
 interface SettingsPanelProps {
   name: string;
@@ -10,13 +12,14 @@ interface SettingsPanelProps {
   soundEnabled: boolean;
   customHolidays: HolidayEntry[];
   isCreator: boolean;
-  onUpdate: (patch: { name?: string; grade?: string; customEndDate?: string | null; soundEnabled?: boolean; isCreator?: boolean }) => void;
+  avatar: AvatarConfig;
+  onUpdate: (patch: { name?: string; grade?: string; customEndDate?: string | null; soundEnabled?: boolean; isCreator?: boolean; avatar?: AvatarConfig }) => void;
   onAddHoliday: (entry: HolidayEntry) => void;
   onRemoveHoliday: (date: string) => void;
 }
 
 export function SettingsPanel({
-  name, grade, customEndDate, soundEnabled, isCreator,
+  name, grade, customEndDate, soundEnabled, isCreator, avatar,
   customHolidays, onUpdate, onAddHoliday, onRemoveHoliday,
 }: SettingsPanelProps) {
   const [newDate, setNewDate] = useState("");
@@ -43,6 +46,13 @@ export function SettingsPanel({
 
   return (
     <div className="w-full max-w-md mx-auto space-y-6">
+      {/* Avatar Builder */}
+      <div className="space-y-3">
+        <h3 className="text-lg font-bold text-foreground">🎨 Your Avatar</h3>
+        <p className="text-xs text-muted-foreground">Build your animated avatar — it shows up next to your chat messages!</p>
+        <AvatarBuilder config={avatar} onChange={(a) => onUpdate({ avatar: a })} />
+      </div>
+
       {/* Name & Grade */}
       <div className="space-y-3">
         <h3 className="text-lg font-bold text-foreground">✏️ Personalize</h3>

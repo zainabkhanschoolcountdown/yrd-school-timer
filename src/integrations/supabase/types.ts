@@ -17,18 +17,21 @@ export type Database = {
       chat_messages: {
         Row: {
           author: string
+          avatar: Json | null
           created_at: string
           id: string
           text: string
         }
         Insert: {
           author: string
+          avatar?: Json | null
           created_at?: string
           id?: string
           text: string
         }
         Update: {
           author?: string
+          avatar?: Json | null
           created_at?: string
           id?: string
           text?: string

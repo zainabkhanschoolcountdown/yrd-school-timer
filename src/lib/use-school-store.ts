@@ -6,6 +6,7 @@ import {
   countTotalSchoolDays,
   type HolidayEntry,
 } from "./school-days";
+import { type AvatarConfig, DEFAULT_AVATAR } from "./avatar";
 
 interface UserSettings {
   name: string;
@@ -14,19 +15,23 @@ interface UserSettings {
   customHolidays: HolidayEntry[];
   soundEnabled: boolean;
   isCreator: boolean;
+  avatar: AvatarConfig;
 }
 
 const STORAGE_KEY = "yrdsb-countdown-settings";
 
 function loadSettings(): UserSettings {
   if (typeof window === "undefined") {
-    return { name: "", grade: "", customEndDate: null, customHolidays: [], soundEnabled: false, isCreator: false };
+    return { name: "", grade: "", customEndDate: null, customHolidays: [], soundEnabled: false, isCreator: false, avatar: DEFAULT_AVATAR };
   }
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return { ...{ avatar: DEFAULT_AVATAR }, ...parsed, avatar: { ...DEFAULT_AVATAR, ...(parsed.avatar || {}) } };
+    }
   } catch {}
-  return { name: "", grade: "", customEndDate: null, customHolidays: [], soundEnabled: false, isCreator: false };
+  return { name: "", grade: "", customEndDate: null, customHolidays: [], soundEnabled: false, isCreator: false, avatar: DEFAULT_AVATAR };
 }
 
 function saveSettings(settings: UserSettings) {

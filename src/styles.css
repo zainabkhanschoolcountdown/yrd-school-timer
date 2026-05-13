@@ -189,3 +189,32 @@
     50% { box-shadow: 0 0 40px oklch(0.65 0.2 145 / 0.6); }
   }
 }
+
+@layer base {
+  @keyframes avatar-bounce-kf {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes avatar-spin-kf {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes avatar-pulse-kf {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+  }
+  @keyframes avatar-wiggle-kf {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-12deg); }
+    75% { transform: rotate(12deg); }
+  }
+  @keyframes avatar-float-kf {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-5px) rotate(3deg); }
+  }
+  .avatar-bounce { animation: avatar-bounce-kf 1.2s ease-in-out infinite; }
+  .avatar-spin { animation: avatar-spin-kf 3s linear infinite; }
+  .avatar-pulse { animation: avatar-pulse-kf 1.4s ease-in-out infinite; }
+  .avatar-wiggle { animation: avatar-wiggle-kf 1.5s ease-in-out infinite; }
+  .avatar-float { animation: avatar-float-kf 2.5s ease-in-out infinite; }
+}
