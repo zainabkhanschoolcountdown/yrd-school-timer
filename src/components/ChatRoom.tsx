@@ -29,7 +29,7 @@ export function ChatRoom({ userName, isCreator = false, avatar }: { userName: st
         .select("*")
         .order("created_at", { ascending: true })
         .limit(100);
-      if (data) setMessages(data);
+      if (data) setMessages(data as unknown as ChatMessage[]);
       setLoading(false);
     };
     fetchMessages();
@@ -84,7 +84,7 @@ export function ChatRoom({ userName, isCreator = false, avatar }: { userName: st
     await supabase.from("chat_messages").insert({
       author: displayName,
       text: textToSend,
-      avatar: avatar,
+      avatar: avatar as unknown as never,
     });
   }, [input, displayName, avatar]);
 
