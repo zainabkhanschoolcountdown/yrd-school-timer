@@ -2,15 +2,18 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Send, AlertTriangle, Loader2, Trash2 } from "lucide-react";
 import { containsProfanity, censorText } from "@/lib/profanity-filter";
 import { supabase } from "@/integrations/supabase/client";
+import { AnimatedAvatar } from "./AnimatedAvatar";
+import { type AvatarConfig, DEFAULT_AVATAR } from "@/lib/avatar";
 
 interface ChatMessage {
   id: string;
   author: string;
   text: string;
   created_at: string;
+  avatar?: AvatarConfig | null;
 }
 
-export function ChatRoom({ userName, isCreator = false }: { userName: string; isCreator?: boolean }) {
+export function ChatRoom({ userName, isCreator = false, avatar }: { userName: string; isCreator?: boolean; avatar: AvatarConfig }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [warning, setWarning] = useState<string | null>(null);
@@ -81,8 +84,9 @@ export function ChatRoom({ userName, isCreator = false }: { userName: string; is
     await supabase.from("chat_messages").insert({
       author: displayName,
       text: textToSend,
+      avatar: avatar,
     });
-  }, [input, displayName]);
+  }, [input, displayName, avatar]);
 
   const deleteMessage = useCallback(async (id: string) => {
     setMessages((prev) => prev.filter((m) => m.id !== id));
@@ -145,6 +149,7 @@ export function ChatRoom({ userName, isCreator = false }: { userName: string; is
         {messages.map(m => {
           const isMine = m.author === displayName;
           const canDelete = isMine || isCreator;
+          const msgAvatar = m.avatar || DEFAULT_AVATAR;
           return (
             <div
               key={m.id}
@@ -154,6 +159,7 @@ export function ChatRoom({ userName, isCreator = false }: { userName: string; is
                 {m.author} • {formatTime(m.created_at)}
               </span>
               <div className={`flex items-center gap-1.5 ${isMine ? "flex-row-reverse" : ""}`}>
+                <AnimatedAvatar config={msgAvatar} size={32} />
                 <div
                   className={`rounded-2xl px-4 py-2 max-w-[80%] text-sm ${
                     isMine
