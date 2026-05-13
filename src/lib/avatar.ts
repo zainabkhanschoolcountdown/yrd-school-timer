@@ -5,6 +5,7 @@ export interface AvatarConfig {
   mouth: "smile" | "grin" | "neutral" | "ohh" | "tongue";
   accessory: "none" | "hat" | "crown" | "bow" | "glasses" | "headphones";
   animation: "bounce" | "spin" | "pulse" | "wiggle" | "float" | "none";
+  shape?: "face" | "cat" | "dog" | "bear" | "bunny" | "fox" | "panda" | "mountain" | "tree" | "sun" | "moon" | "star" | "heart" | "robot" | "ghost" | "alien";
 }
 
 export const DEFAULT_AVATAR: AvatarConfig = {
@@ -14,7 +15,14 @@ export const DEFAULT_AVATAR: AvatarConfig = {
   mouth: "smile",
   accessory: "none",
   animation: "bounce",
+  shape: "face",
 };
+
+export const SHAPES: NonNullable<AvatarConfig["shape"]>[] = [
+  "face", "cat", "dog", "bear", "bunny", "fox", "panda",
+  "mountain", "tree", "sun", "moon", "star", "heart",
+  "robot", "ghost", "alien",
+];
 
 export const PALETTE_BG = [
   "#7c3aed", "#ec4899", "#f97316", "#facc15",
