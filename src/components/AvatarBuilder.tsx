@@ -1,5 +1,5 @@
 import { AnimatedAvatar } from "./AnimatedAvatar";
-import { type AvatarConfig, PALETTE_BG, PALETTE_FACE } from "@/lib/avatar";
+import { type AvatarConfig, PALETTE_BG, PALETTE_FACE, SHAPES } from "@/lib/avatar";
 
 interface Props {
   config: AvatarConfig;
@@ -25,6 +25,17 @@ export function AvatarBuilder({ config, onChange }: Props) {
       <div className="flex justify-center py-4 bg-muted/40 rounded-2xl border">
         <AnimatedAvatar config={config} size={120} />
       </div>
+
+      {/* Shape preset */}
+      <Section label="Shape">
+        <ChipRow>
+          {SHAPES.map(s => (
+            <Chip key={s} active={(config.shape ?? "face") === s} onClick={() => set("shape", s)}>
+              <AnimatedAvatar config={{ ...config, shape: s, animation: "none" }} size={40} animate={false} />
+            </Chip>
+          ))}
+        </ChipRow>
+      </Section>
 
       {/* Background color */}
       <Section label="Background">
