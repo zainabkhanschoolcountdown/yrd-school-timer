@@ -38,6 +38,45 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          role: string
+          username_lower: string
+        }
+        Insert: {
+          created_at?: string
+          role: string
+          username_lower: string
+        }
+        Update: {
+          created_at?: string
+          role?: string
+          username_lower?: string
+        }
+        Relationships: []
+      }
+      widgets: {
+        Row: {
+          created_at: string
+          emoji: string
+          id: string
+          label: string
+        }
+        Insert: {
+          created_at?: string
+          emoji?: string
+          id?: string
+          label: string
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          id?: string
+          label?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

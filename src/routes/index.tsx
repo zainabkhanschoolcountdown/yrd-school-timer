@@ -7,7 +7,9 @@ import { SettingsPanel } from "@/components/SettingsPanel";
 import { CreatorPanel } from "@/components/CreatorPanel";
 import { GamesTab } from "@/components/GamesTab";
 import { ChatRoom } from "@/components/ChatRoom";
-import { Crown } from "lucide-react";
+import { WidgetStrip } from "@/components/WidgetStrip";
+import { RoleBadge } from "@/components/RoleBadge";
+import { useRoles } from "@/lib/use-roles";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -24,6 +26,7 @@ type Tab = "countdown" | "calendar" | "games" | "chat" | "settings" | "creator";
 function Index() {
   const store = useSchoolStore();
   const [tab, setTab] = useState<Tab>("countdown");
+  const { isAdmin } = useRoles();
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: "countdown", label: "Countdown", icon: "⏳" },
@@ -34,17 +37,23 @@ function Index() {
   ];
 
   const isCreator = store.settings.isCreator === true;
+  const meIsAdmin = isAdmin(store.settings.name);
 
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="text-center pt-8 pb-4 px-4">
         <h1
-          className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary via-sky to-accent bg-clip-text text-transparent"
+          className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary via-sky to-accent bg-clip-text text-transparent inline-flex items-center gap-2 justify-center"
           style={{ WebkitBackgroundClip: "text" }}
         >
-          🎒 School Day Countdown {isCreator && <Crown className="inline text-[var(--color-creator-gold)]" size={28} />}
+          <span>🎒 School Day Countdown</span>
         </h1>
+        {(isCreator || meIsAdmin) && (
+          <div className="mt-2 flex justify-center">
+            <RoleBadge role={isCreator ? "creator" : "admin"} size={14} />
+          </div>
+        )}
         <p className="text-white/70 mt-1 text-sm">YRDSB Elementary</p>
       </header>
 
@@ -83,6 +92,7 @@ function Index() {
       <main className="flex-1 px-4 pb-12 max-w-2xl mx-auto w-full">
         <div className="rounded-3xl bg-card shadow-xl border p-6 md:p-10">
           {tab === "countdown" && (
+            <>
             <CountdownDisplay
               daysRemaining={store.daysRemaining}
               progress={store.progress}
@@ -92,6 +102,8 @@ function Index() {
               grade={store.settings.grade}
               soundEnabled={store.settings.soundEnabled}
             />
+            <WidgetStrip />
+            </>
           )}
           {tab === "calendar" && (
             <CalendarView
