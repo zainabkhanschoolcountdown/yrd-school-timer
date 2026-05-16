@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
 import {
   getCurrentSchoolYear,
   getDefaultHolidays,
@@ -76,9 +77,9 @@ export function useSchoolStore(userId: string | null) {
     const payload = {
       grade: settings.grade,
       custom_end_date: settings.customEndDate,
-      custom_holidays: settings.customHolidays as unknown as object,
+      custom_holidays: settings.customHolidays as unknown as Json,
       sound_enabled: settings.soundEnabled,
-      avatar: settings.avatar as unknown as object,
+      avatar: settings.avatar as unknown as Json,
     };
     supabase.from("profiles").update(payload).eq("user_id", userId).then(() => {});
   }, [settings, userId, loaded]);
