@@ -21,7 +21,7 @@ export function useRoles() {
   useEffect(() => {
     refresh();
     const ch = supabase
-      .channel("roles-realtime")
+      .channel(`roles-realtime-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "user_roles" }, () => refresh())
       .subscribe();
     return () => {
