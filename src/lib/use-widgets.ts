@@ -23,7 +23,7 @@ export function useWidgets() {
   useEffect(() => {
     refresh();
     const ch = supabase
-      .channel("widgets-realtime")
+      .channel(`widgets-realtime-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "widgets" }, () => refresh())
       .subscribe();
     return () => {
