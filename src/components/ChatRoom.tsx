@@ -59,7 +59,7 @@ export function ChatRoom({
 
   useEffect(() => {
     const channel = supabase
-      .channel("chat-realtime")
+      .channel(`chat-realtime-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "chat_messages" },
