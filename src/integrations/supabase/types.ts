@@ -38,6 +38,45 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          avatar: Json
+          created_at: string
+          custom_end_date: string | null
+          custom_holidays: Json
+          grade: string
+          sound_enabled: boolean
+          updated_at: string
+          user_id: string
+          username: string
+          username_lower: string
+        }
+        Insert: {
+          avatar?: Json
+          created_at?: string
+          custom_end_date?: string | null
+          custom_holidays?: Json
+          grade?: string
+          sound_enabled?: boolean
+          updated_at?: string
+          user_id: string
+          username: string
+          username_lower: string
+        }
+        Update: {
+          avatar?: Json
+          created_at?: string
+          custom_end_date?: string | null
+          custom_holidays?: Json
+          grade?: string
+          sound_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+          username?: string
+          username_lower?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
