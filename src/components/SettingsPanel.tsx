@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { HolidayEntry } from "@/lib/school-days";
-import { Lock, Unlock, Crown } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { AvatarBuilder } from "./AvatarBuilder";
 import { type AvatarConfig } from "@/lib/avatar";
+import { useAuth } from "@/lib/use-auth";
 
 interface SettingsPanelProps {
   name: string;
@@ -13,39 +14,32 @@ interface SettingsPanelProps {
   customHolidays: HolidayEntry[];
   isCreator: boolean;
   avatar: AvatarConfig;
-  onUpdate: (patch: { name?: string; grade?: string; customEndDate?: string | null; soundEnabled?: boolean; isCreator?: boolean; avatar?: AvatarConfig }) => void;
+  onUpdate: (patch: { grade?: string; customEndDate?: string | null; soundEnabled?: boolean; avatar?: AvatarConfig }) => void;
   onAddHoliday: (entry: HolidayEntry) => void;
   onRemoveHoliday: (date: string) => void;
 }
 
 export function SettingsPanel({
-  name, grade, customEndDate, soundEnabled, isCreator, avatar,
+  name, grade, customEndDate, soundEnabled, avatar,
   customHolidays, onUpdate, onAddHoliday, onRemoveHoliday,
 }: SettingsPanelProps) {
   const [newDate, setNewDate] = useState("");
   const [newName, setNewName] = useState("");
-  const [creatorPassword, setCreatorPassword] = useState("");
-  const [creatorError, setCreatorError] = useState<string | null>(null);
-  const [creatorSuccess, setCreatorSuccess] = useState(false);
-
-  const CREATOR_PASSWORD = "986314";
-
-  const handleCreatorUnlock = () => {
-    if (creatorPassword === CREATOR_PASSWORD) {
-      onUpdate({ isCreator: true });
-      setCreatorSuccess(true);
-      setCreatorError(null);
-      setCreatorPassword("");
-      setTimeout(() => setCreatorSuccess(false), 3000);
-    } else {
-      setCreatorError("Wrong password!");
-      setCreatorSuccess(false);
-      setTimeout(() => setCreatorError(null), 3000);
-    }
-  };
+  const { signOut } = useAuth();
 
   return (
     <div className="w-full max-w-md mx-auto space-y-6">
+      {/* Account */}
+      <div className="rounded-2xl bg-muted/40 p-4 flex items-center justify-between gap-3">
+        <div>
+          <p className="text-xs text-muted-foreground">Signed in as</p>
+          <p className="font-bold text-foreground">{name || "—"}</p>
+        </div>
+        <Button onClick={signOut} variant="secondary" className="rounded-xl">
+          <LogOut size={16} className="mr-1" /> Log out
+        </Button>
+      </div>
+
       {/* Avatar Builder */}
       <div className="space-y-3">
         <h3 className="text-lg font-bold text-foreground">🎨 Your Avatar</h3>
@@ -53,16 +47,9 @@ export function SettingsPanel({
         <AvatarBuilder config={avatar} onChange={(a) => onUpdate({ avatar: a })} />
       </div>
 
-      {/* Name & Grade */}
+      {/* Grade */}
       <div className="space-y-3">
-        <h3 className="text-lg font-bold text-foreground">✏️ Personalize</h3>
-        <input
-          type="text"
-          placeholder="Your name"
-          value={name}
-          onChange={e => onUpdate({ name: e.target.value })}
-          className="w-full rounded-xl border bg-card px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-        />
+        <h3 className="text-lg font-bold text-foreground">🎓 Grade</h3>
         <select
           value={grade}
           onChange={e => onUpdate({ grade: e.target.value })}
@@ -151,42 +138,6 @@ export function SettingsPanel({
               </li>
             ))}
           </ul>
-        )}
-      </div>
-
-      {/* Creator Mode */}
-      <div className="space-y-3">
-        <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <Crown size={18} className="text-amber-400" /> Creator Mode
-        </h3>
-        {isCreator ? (
-          <div className="flex items-center gap-2 text-sm text-green-400 font-medium">
-            <Unlock size={16} />
-            Creator mode is active! 👑
-          </div>
-        ) : (
-          <div className="space-y-2">
-            <p className="text-xs text-muted-foreground">Enter the creator password to unlock special features.</p>
-            <div className="flex gap-2">
-              <input
-                type="password"
-                placeholder="Password"
-                value={creatorPassword}
-                onChange={e => setCreatorPassword(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handleCreatorUnlock()}
-                className="flex-1 rounded-xl border bg-card px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <Button onClick={handleCreatorUnlock} className="rounded-xl">
-                <Lock size={16} />
-              </Button>
-            </div>
-            {creatorError && (
-              <p className="text-xs text-destructive font-medium">{creatorError}</p>
-            )}
-            {creatorSuccess && (
-              <p className="text-xs text-green-400 font-medium">✅ Creator mode unlocked!</p>
-            )}
-          </div>
         )}
       </div>
     </div>
