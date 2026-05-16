@@ -10,6 +10,8 @@ import { ChatRoom } from "@/components/ChatRoom";
 import { WidgetStrip } from "@/components/WidgetStrip";
 import { RoleBadge } from "@/components/RoleBadge";
 import { useRoles } from "@/lib/use-roles";
+import { useAuth } from "@/lib/use-auth";
+import { AuthScreen } from "@/components/AuthScreen";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -24,9 +26,18 @@ export const Route = createFileRoute("/")({
 type Tab = "countdown" | "calendar" | "games" | "chat" | "settings" | "creator";
 
 function Index() {
-  const store = useSchoolStore();
+  const { session, loading } = useAuth();
+  const userId = session?.user?.id ?? null;
+  const store = useSchoolStore(userId);
   const [tab, setTab] = useState<Tab>("countdown");
   const { isAdmin } = useRoles();
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Loading…</div>;
+  }
+  if (!session) {
+    return <AuthScreen />;
+  }
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: "countdown", label: "Countdown", icon: "⏳" },
