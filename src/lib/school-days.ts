@@ -54,34 +54,73 @@ export function getDefaultHolidays(schoolYear: SchoolYear): HolidayEntry[] {
 
   return [
     // Thanksgiving (2nd Monday of October)
-    { date: `${startYear}-10-14`, name: "Thanksgiving Day" },
-    // PA Days (sample)
-    { date: `${startYear}-10-11`, name: "PA Day" },
-    { date: `${startYear}-11-15`, name: "PA Day" },
-    // Winter Break (Dec 23 - Jan 3 typical)
-    ...generateDateRange(`${startYear}-12-23`, `${endYear}-01-03`).map(d => ({
+    { date: `${startYear}-${pad(nthWeekdayOfMonth(startYear, 9, 1, 2))}`, name: "Thanksgiving Day" },
+    // Winter Break (Dec 22 - Jan 2 typical)
+    ...generateDateRange(`${startYear}-12-22`, `${endYear}-01-02`).map(d => ({
       date: d, name: "Winter Break",
     })),
-    // PA Day after winter break
-    { date: `${endYear}-01-17`, name: "PA Day" },
     // Family Day (3rd Monday of February)
-    { date: `${endYear}-02-17`, name: "Family Day" },
-    // PA Day
-    { date: `${endYear}-02-14`, name: "PA Day" },
-    // March Break (3rd week of March typically)
-    ...generateDateRange(`${endYear}-03-10`, `${endYear}-03-14`).map(d => ({
-      date: d, name: "March Break",
-    })),
-    // Good Friday (approximate - varies)
-    { date: `${endYear}-04-18`, name: "Good Friday" },
-    // Easter Monday
-    { date: `${endYear}-04-21`, name: "Easter Monday" },
-    // Victoria Day (Monday before May 25)
-    { date: `${endYear}-05-19`, name: "Victoria Day" },
-    // PA Days in June
-    { date: `${endYear}-06-06`, name: "PA Day" },
-    { date: `${endYear}-06-27`, name: "PA Day" },
+    { date: `${endYear}-02-${pad(nthWeekdayOfMonth(endYear, 1, 1, 3))}`, name: "Family Day" },
+    // March Break (Monday-Friday of the week containing the 3rd Monday of March in Ontario; YRDSB uses week after Family Day's pattern — 2nd full week)
+    ...marchBreakRange(endYear).map(d => ({ date: d, name: "March Break" })),
+    // Good Friday & Easter Monday (computed)
+    { date: easterOffset(endYear, -2), name: "Good Friday" },
+    { date: easterOffset(endYear, 1), name: "Easter Monday" },
+    // Victoria Day (Monday on or before May 24)
+    { date: `${endYear}-05-${pad(victoriaDay(endYear))}`, name: "Victoria Day" },
   ];
+}
+
+function pad(n: number): string {
+  return String(n).padStart(2, "0");
+}
+
+/** month is 0-indexed; weekday 0=Sun..6=Sat; n = which occurrence (1-based). Returns day-of-month. */
+function nthWeekdayOfMonth(year: number, month: number, weekday: number, n: number): number {
+  const first = new Date(year, month, 1);
+  const offset = (7 + weekday - first.getDay()) % 7;
+  return 1 + offset + (n - 1) * 7;
+}
+
+/** Victoria Day: Monday on or before May 24. */
+function victoriaDay(year: number): number {
+  const may24 = new Date(year, 4, 24);
+  const dow = may24.getDay(); // 0=Sun..6=Sat
+  const back = dow === 0 ? 6 : dow - 1; // days back to Monday
+  return 24 - back;
+}
+
+/** Compute Easter Sunday (Gregorian) for given year, return Date. */
+function easterSunday(year: number): Date {
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31); // 3=March, 4=April
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(year, month - 1, day);
+}
+
+function easterOffset(year: number, deltaDays: number): string {
+  const d = easterSunday(year);
+  d.setDate(d.getDate() + deltaDays);
+  return formatDate(d);
+}
+
+/** March Break: Monday–Friday of the week starting on the 2nd Monday of March (YRDSB convention). */
+function marchBreakRange(year: number): string[] {
+  const monday = nthWeekdayOfMonth(year, 2, 1, 2);
+  const start = `${year}-03-${pad(monday)}`;
+  const end = `${year}-03-${pad(monday + 4)}`;
+  return generateDateRange(start, end);
 }
 
 /** Generate an array of date strings between start and end (inclusive). */
