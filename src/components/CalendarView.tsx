@@ -75,7 +75,7 @@ export function CalendarView({ holidayDates, allHolidays, startDate, endDate }: 
         {cells.map((day, i) => {
           if (day === null) return <div key={`empty-${i}`} />;
           const date = new Date(currentYear, currentMonth, day);
-          const type = getDayType(date, holidayDates);
+          const type = getDayType(date, holidayDates, startDate, endDate);
           const dateStr = formatDate(date);
           const holidayName = holidayMap.get(dateStr);
 

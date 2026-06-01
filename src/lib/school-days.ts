@@ -161,6 +161,8 @@ export type DayType = "school" | "weekend" | "holiday" | "past-school" | "today"
 export function getDayType(
   date: Date,
   holidayDates: Set<string>,
+  startDate?: Date,
+  endDate?: Date,
 ): DayType {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -168,6 +170,9 @@ export function getDayType(
   d.setHours(0, 0, 0, 0);
 
   if (d.getTime() === today.getTime()) return "today";
+  if ((startDate && d < startDate) || (endDate && d > endDate)) {
+    return "holiday";
+  }
   if (isWeekend(d)) return "weekend";
   if (holidayDates.has(formatDate(d))) return "holiday";
   if (d < today) return "past-school";
