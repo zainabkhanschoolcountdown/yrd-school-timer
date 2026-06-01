@@ -19,10 +19,12 @@ const CREATOR_NAME_LOWER = "mountfuji";
 
 export function ChatRoom({
   userName,
+  userId,
   isCreator = false,
   avatar,
 }: {
   userName: string;
+  userId: string | null;
   isCreator?: boolean;
   avatar: AvatarConfig;
 }) {
@@ -87,7 +89,7 @@ export function ChatRoom({
   }, [messages]);
 
   const sendMessage = useCallback(async () => {
-    if (meIsBanned) return;
+    if (meIsBanned || !userId) return;
     const trimmed = input.trim();
     if (!trimmed) return;
     let textToSend = trimmed;
@@ -100,11 +102,12 @@ export function ChatRoom({
     }
     setInput("");
     await supabase.from("chat_messages").insert({
+      user_id: userId,
       author: displayName,
       text: textToSend,
       avatar: avatar as unknown as never,
     });
-  }, [input, displayName, avatar, meIsBanned]);
+  }, [input, displayName, avatar, meIsBanned, userId]);
 
   const deleteMessage = useCallback(async (id: string) => {
     setMessages((prev) => prev.filter((m) => m.id !== id));
