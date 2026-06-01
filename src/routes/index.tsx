@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type Tab = "countdown" | "calendar" | "games" | "chat" | "settings" | "creator";
+type Tab = "countdown" | "games" | "chat" | "settings" | "creator";
 
 function Index() {
   const { session, loading } = useAuth();
