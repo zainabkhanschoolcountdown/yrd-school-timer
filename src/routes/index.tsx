@@ -40,7 +40,6 @@ function Index() {
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: "countdown", label: "Countdown", icon: "⏳" },
-    { id: "calendar", label: "Calendar", icon: "📅" },
     { id: "games", label: "Games", icon: "🎮" },
     { id: "chat", label: "Chat", icon: "💬" },
     { id: "settings", label: "Settings", icon: "⚙️" },
