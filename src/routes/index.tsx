@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useSchoolStore } from "@/lib/use-school-store";
 import { CountdownDisplay } from "@/components/CountdownDisplay";
-import { CalendarView } from "@/components/CalendarView";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { CreatorPanel } from "@/components/CreatorPanel";
 import { GamesTab } from "@/components/GamesTab";
@@ -23,7 +22,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type Tab = "countdown" | "calendar" | "games" | "chat" | "settings" | "creator";
+type Tab = "countdown" | "games" | "chat" | "settings" | "creator";
 
 function Index() {
   const { session, loading } = useAuth();
@@ -41,7 +40,6 @@ function Index() {
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: "countdown", label: "Countdown", icon: "⏳" },
-    { id: "calendar", label: "Calendar", icon: "📅" },
     { id: "games", label: "Games", icon: "🎮" },
     { id: "chat", label: "Chat", icon: "💬" },
     { id: "settings", label: "Settings", icon: "⚙️" },
@@ -115,14 +113,6 @@ function Index() {
             />
             <WidgetStrip />
             </>
-          )}
-          {tab === "calendar" && (
-            <CalendarView
-              holidayDates={store.holidayDates}
-              allHolidays={store.allHolidays}
-              startDate={store.schoolYear.startDate}
-              endDate={store.endDate}
-            />
           )}
           {tab === "games" && <GamesTab />}
           {tab === "chat" && <ChatRoom userName={store.settings.name} isCreator={isCreator} avatar={store.settings.avatar} />}
