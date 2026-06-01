@@ -114,14 +114,6 @@ function Index() {
             <WidgetStrip />
             </>
           )}
-          {tab === "calendar" && (
-            <CalendarView
-              holidayDates={store.holidayDates}
-              allHolidays={store.allHolidays}
-              startDate={store.schoolYear.startDate}
-              endDate={store.endDate}
-            />
-          )}
           {tab === "games" && <GamesTab />}
           {tab === "chat" && <ChatRoom userName={store.settings.name} isCreator={isCreator} avatar={store.settings.avatar} />}
           {tab === "settings" && (
