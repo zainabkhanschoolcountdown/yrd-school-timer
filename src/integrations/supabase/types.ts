@@ -21,6 +21,7 @@ export type Database = {
           created_at: string
           id: string
           text: string
+          user_id: string | null
         }
         Insert: {
           author: string
@@ -28,6 +29,7 @@ export type Database = {
           created_at?: string
           id?: string
           text: string
+          user_id?: string | null
         }
         Update: {
           author?: string
@@ -35,6 +37,7 @@ export type Database = {
           created_at?: string
           id?: string
           text?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -121,7 +124,9 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      current_username_lower: { Args: never; Returns: string }
+      is_creator: { Args: never; Returns: boolean }
+      user_has_role: { Args: { _role: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
