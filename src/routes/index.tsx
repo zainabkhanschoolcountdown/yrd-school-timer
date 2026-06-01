@@ -115,7 +115,7 @@ function Index() {
             </>
           )}
           {tab === "games" && <GamesTab />}
-          {tab === "chat" && <ChatRoom userName={store.settings.name} isCreator={isCreator} avatar={store.settings.avatar} />}
+          {tab === "chat" && <ChatRoom userName={store.settings.name} userId={userId} isCreator={isCreator} avatar={store.settings.avatar} />}
           {tab === "settings" && (
             <SettingsPanel
               name={store.settings.name}
