@@ -1,15 +1,8 @@
 import { useState } from "react";
 
-type GameId = "menu" | "among-us" | "parkour" | "four-colors" | "geometry-dash";
+type GameId = "menu" | "parkour" | "four-colors" | "geometry-dash";
 
 const GAMES = [
-  {
-    id: "among-us" as const,
-    name: "Impostor (Among Us)",
-    emoji: "🚀",
-    desc: "Play the classic impostor game online!",
-    url: "https://html5.gamedistribution.com/rvvASMiM/9abe6af0fbb440b98a3e24bf7fb0636a/index.html",
-  },
   {
     id: "parkour" as const,
     name: "Stickman Parkour",
