@@ -114,7 +114,7 @@ function Index() {
             <WidgetStrip />
             </>
           )}
-          {tab === "games" && <GamesTab />}
+          {tab === "games" && <GamesTab userId={userId} />}
           {tab === "chat" && <ChatRoom userName={store.settings.name} userId={userId} isCreator={isCreator} avatar={store.settings.avatar} />}
           {tab === "settings" && (
             <SettingsPanel
