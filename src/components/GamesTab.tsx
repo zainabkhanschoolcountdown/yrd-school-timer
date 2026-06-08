@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type GameId = "menu" | "parkour" | "four-colors" | "geometry-dash";
 
@@ -26,8 +28,45 @@ const GAMES = [
   },
 ];
 
-export function GamesTab() {
+type GamesTabProps = { userId: string | null };
+
+export function GamesTab({ userId }: GamesTabProps) {
   const [active, setActive] = useState<GameId>("menu");
+  const [gameName, setGameName] = useState("");
+  const [gameUrl, setGameUrl] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  async function submitRecommendation(e: React.FormEvent) {
+    e.preventDefault();
+    if (!userId) {
+      toast.error("You must be signed in to recommend a game.");
+      return;
+    }
+    const name = gameName.trim();
+    const url = gameUrl.trim();
+    if (name.length < 1 || name.length > 100) {
+      toast.error("Game name must be 1–100 characters.");
+      return;
+    }
+    if (url.length > 500) {
+      toast.error("URL must be 500 characters or fewer.");
+      return;
+    }
+    setSubmitting(true);
+    const { error } = await supabase.from("game_recommendations").insert({
+      user_id: userId,
+      game_name: name,
+      game_url: url || null,
+    });
+    setSubmitting(false);
+    if (error) {
+      toast.error("Couldn't send recommendation. Try again.");
+      return;
+    }
+    setGameName("");
+    setGameUrl("");
+    toast.success("Thanks! Your recommendation was sent. 🎉");
+  }
 
   const activeGame = GAMES.find(g => g.id === active);
 
@@ -84,6 +123,40 @@ export function GamesTab() {
           </button>
         ))}
       </div>
+
+      <form
+        onSubmit={submitRecommendation}
+        className="w-full max-w-md mt-4 rounded-2xl bg-muted p-4 flex flex-col gap-3 shadow-md"
+      >
+        <div>
+          <h3 className="font-bold text-foreground text-sm">💡 Recommend a game</h3>
+          <p className="text-xs text-muted-foreground">Suggest a game you'd love to see here!</p>
+        </div>
+        <input
+          type="text"
+          value={gameName}
+          onChange={e => setGameName(e.target.value)}
+          placeholder="Game name"
+          maxLength={100}
+          required
+          className="rounded-lg bg-background px-3 py-2 text-sm text-foreground border border-white/10 focus:outline-none focus:border-primary"
+        />
+        <input
+          type="url"
+          value={gameUrl}
+          onChange={e => setGameUrl(e.target.value)}
+          placeholder="Game URL (optional)"
+          maxLength={500}
+          className="rounded-lg bg-background px-3 py-2 text-sm text-foreground border border-white/10 focus:outline-none focus:border-primary"
+        />
+        <button
+          type="submit"
+          disabled={submitting || !userId}
+          className="rounded-lg bg-primary text-primary-foreground font-bold text-sm py-2 hover:opacity-90 disabled:opacity-50 transition"
+        >
+          {submitting ? "Sending…" : "Send Recommendation"}
+        </button>
+      </form>
     </div>
   );
 }
