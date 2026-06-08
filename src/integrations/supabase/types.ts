@@ -41,6 +41,30 @@ export type Database = {
         }
         Relationships: []
       }
+      game_recommendations: {
+        Row: {
+          created_at: string
+          game_name: string
+          game_url: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          game_name: string
+          game_url?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          game_name?: string
+          game_url?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar: Json
