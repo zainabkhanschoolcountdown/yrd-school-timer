@@ -34,7 +34,7 @@ function Index() {
   const [tab, setTab] = useState<Tab>("countdown");
   const { isAdmin } = useRoles();
 
-  if (loading) {
+  if (loading || (session && !store.loaded)) {
     return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Loading…</div>;
   }
   if (!session) {
