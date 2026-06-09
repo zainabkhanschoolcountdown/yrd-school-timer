@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useRoles } from "@/lib/use-roles";
 import { useWidgets } from "@/lib/use-widgets";
 import { RoleBadge } from "./RoleBadge";
+import { GameRecommendationsList } from "./GameRecommendationsList";
 
 export function CreatorPanel() {
   const { admins, banned, addRole, removeRole } = useRoles();
@@ -180,6 +181,8 @@ export function CreatorPanel() {
           <p className="text-sm text-muted-foreground italic">No widgets yet</p>
         )}
       </div>
+
+      <GameRecommendationsList />
     </div>
   );
 }
