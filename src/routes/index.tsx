@@ -12,6 +12,8 @@ import { RoleBadge } from "@/components/RoleBadge";
 import { useRoles } from "@/lib/use-roles";
 import { useAuth } from "@/lib/use-auth";
 import { AuthScreen } from "@/components/AuthScreen";
+import { SchoolBoardPicker } from "@/components/SchoolBoardPicker";
+import { endDateForBoard } from "@/lib/school-boards";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -37,6 +39,22 @@ function Index() {
   }
   if (!session) {
     return <AuthScreen />;
+  }
+
+  // After sign-in, prompt user to pick a school board before showing the app.
+  if (!store.settings.schoolBoard) {
+    return (
+      <SchoolBoardPicker
+        current={store.settings.schoolBoard}
+        onSelect={(board) => {
+          store.updateSettings({
+            schoolBoard: board.id,
+            customEndDate: endDateForBoard(board, store.schoolYear.endDate),
+          });
+        }}
+        onSkip={() => store.updateSettings({ schoolBoard: "__skipped__" })}
+      />
+    );
   }
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
