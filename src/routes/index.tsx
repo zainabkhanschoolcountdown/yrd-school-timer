@@ -4,6 +4,7 @@ import { useSchoolStore } from "@/lib/use-school-store";
 import { CountdownDisplay } from "@/components/CountdownDisplay";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { CreatorPanel } from "@/components/CreatorPanel";
+import { GameRecommendationsList } from "@/components/GameRecommendationsList";
 import { GamesTab } from "@/components/GamesTab";
 import { ChatRoom } from "@/components/ChatRoom";
 import { WidgetStrip } from "@/components/WidgetStrip";
@@ -22,7 +23,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type Tab = "countdown" | "games" | "chat" | "settings" | "creator";
+type Tab = "countdown" | "games" | "chat" | "settings" | "creator" | "admin";
 
 function Index() {
   const { session, loading } = useAuth();
@@ -95,6 +96,19 @@ function Index() {
             <span className="hidden sm:inline">Creator</span>
           </button>
         )}
+        {!isCreator && meIsAdmin && (
+          <button
+            onClick={() => setTab("admin")}
+            className={`flex items-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-bold transition-all ${
+              tab === "admin"
+                ? "bg-primary text-primary-foreground shadow-lg scale-105"
+                : "bg-muted text-muted-foreground hover:bg-muted/80"
+            }`}
+          >
+            <span>🛡️</span>
+            <span className="hidden sm:inline">Admin</span>
+          </button>
+        )}
       </nav>
 
       {/* Content */}
@@ -131,6 +145,7 @@ function Index() {
             />
           )}
           {tab === "creator" && isCreator && <CreatorPanel />}
+          {tab === "admin" && meIsAdmin && <GameRecommendationsList />}
         </div>
       </main>
 
