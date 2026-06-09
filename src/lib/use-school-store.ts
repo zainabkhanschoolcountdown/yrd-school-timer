@@ -124,5 +124,6 @@ export function useSchoolStore(userId: string | null) {
     totalDays,
     daysPassed,
     progress,
+    loaded,
   };
 }
