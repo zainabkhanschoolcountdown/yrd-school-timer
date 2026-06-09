@@ -18,6 +18,7 @@ interface UserSettings {
   soundEnabled: boolean;
   isCreator: boolean;
   avatar: AvatarConfig;
+  schoolBoard: string | null;
 }
 
 const CREATOR_USERNAMES = new Set(["mountfuji"]);
@@ -30,6 +31,7 @@ const emptySettings: UserSettings = {
   soundEnabled: false,
   isCreator: false,
   avatar: DEFAULT_AVATAR,
+  schoolBoard: null,
 };
 
 export function useSchoolStore(userId: string | null) {
@@ -50,7 +52,7 @@ export function useSchoolStore(userId: string | null) {
     (async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("username, grade, custom_end_date, custom_holidays, sound_enabled, avatar")
+        .select("username, grade, custom_end_date, custom_holidays, sound_enabled, avatar, school_board")
         .eq("user_id", userId)
         .maybeSingle();
       if (data) {
@@ -63,6 +65,7 @@ export function useSchoolStore(userId: string | null) {
           soundEnabled: !!data.sound_enabled,
           isCreator: CREATOR_USERNAMES.has(uname.toLowerCase()),
           avatar: { ...DEFAULT_AVATAR, ...((data.avatar as Partial<AvatarConfig>) || {}) },
+          schoolBoard: (data as { school_board?: string | null }).school_board ?? null,
         });
       }
       setLoaded(true);
@@ -80,6 +83,7 @@ export function useSchoolStore(userId: string | null) {
       custom_holidays: settings.customHolidays as unknown as Json,
       sound_enabled: settings.soundEnabled,
       avatar: settings.avatar as unknown as Json,
+      school_board: settings.schoolBoard,
     };
     supabase.from("profiles").update(payload).eq("user_id", userId).then(() => {});
   }, [settings, userId, loaded]);
@@ -120,5 +124,6 @@ export function useSchoolStore(userId: string | null) {
     totalDays,
     daysPassed,
     progress,
+    loaded,
   };
 }

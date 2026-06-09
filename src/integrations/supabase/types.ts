@@ -72,6 +72,7 @@ export type Database = {
           custom_end_date: string | null
           custom_holidays: Json
           grade: string
+          school_board: string | null
           sound_enabled: boolean
           updated_at: string
           user_id: string
@@ -84,6 +85,7 @@ export type Database = {
           custom_end_date?: string | null
           custom_holidays?: Json
           grade?: string
+          school_board?: string | null
           sound_enabled?: boolean
           updated_at?: string
           user_id: string
@@ -96,6 +98,7 @@ export type Database = {
           custom_end_date?: string | null
           custom_holidays?: Json
           grade?: string
+          school_board?: string | null
           sound_enabled?: boolean
           updated_at?: string
           user_id?: string
