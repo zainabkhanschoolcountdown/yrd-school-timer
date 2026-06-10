@@ -14,7 +14,7 @@ import { useAuth } from "@/lib/use-auth";
 import { AuthScreen } from "@/components/AuthScreen";
 import { SchoolBoardPicker } from "@/components/SchoolBoardPicker";
 import { endDateForBoard } from "@/lib/school-boards";
-import { useDeviceBan, useRecordDevice } from "@/lib/use-device-ban";
+import { useDeviceBan } from "@/lib/use-device-ban";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -35,7 +35,6 @@ function Index() {
   const [tab, setTab] = useState<Tab>("countdown");
   const { isAdmin } = useRoles();
   const { banned: deviceBanned, checked: banChecked } = useDeviceBan();
-  useRecordDevice(userId);
 
   if (banChecked && deviceBanned) {
     return (
