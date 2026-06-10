@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      banned_devices: {
+        Row: {
+          banned_by: string | null
+          created_at: string
+          fingerprint: string
+        }
+        Insert: {
+          banned_by?: string | null
+          created_at?: string
+          fingerprint: string
+        }
+        Update: {
+          banned_by?: string | null
+          created_at?: string
+          fingerprint?: string
+        }
+        Relationships: []
+      }
       chat_messages: {
         Row: {
           author: string
@@ -38,6 +56,27 @@ export type Database = {
           id?: string
           text?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      device_fingerprints: {
+        Row: {
+          created_at: string
+          fingerprint: string
+          last_seen_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          fingerprint: string
+          last_seen_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          fingerprint?: string
+          last_seen_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -151,6 +190,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      ban_user_devices: { Args: { _username: string }; Returns: number }
       current_username_lower: { Args: never; Returns: string }
       is_creator: { Args: never; Returns: boolean }
       user_has_role: { Args: { _role: string }; Returns: boolean }
