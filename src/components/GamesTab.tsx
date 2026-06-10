@@ -2,7 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-type GameId = "menu" | "parkour" | "four-colors" | "geometry-dash";
+type GameId = "menu" | "parkour" | "four-colors" | "geometry-dash" | "chess";
 
 const GAMES = [
   {
@@ -25,6 +25,13 @@ const GAMES = [
     emoji: "🔷",
     desc: "Jump to the beat & dodge obstacles!",
     url: "https://html5.gamedistribution.com/8b65f47d53a6406c8bc767cd1a16a2ec/",
+  },
+  {
+    id: "chess" as const,
+    name: "Chess.com",
+    emoji: "♟️",
+    desc: "Play chess online!",
+    url: "https://www.chess.com/play/online",
   },
 ];
 
