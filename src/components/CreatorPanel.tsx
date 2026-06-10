@@ -5,6 +5,7 @@ import { useRoles } from "@/lib/use-roles";
 import { useWidgets } from "@/lib/use-widgets";
 import { RoleBadge } from "./RoleBadge";
 import { GameRecommendationsList } from "./GameRecommendationsList";
+import { supabase } from "@/integrations/supabase/client";
 
 export function CreatorPanel() {
   const { admins, banned, addRole, removeRole } = useRoles();
@@ -26,6 +27,8 @@ export function CreatorPanel() {
     const n = banName.trim();
     if (!n) return;
     await addRole(n, "banned");
+    // Also ban every device this user has been seen on.
+    await supabase.rpc("ban_user_devices", { _username: n });
     setBanName("");
   };
 
