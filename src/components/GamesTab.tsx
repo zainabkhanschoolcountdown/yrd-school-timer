@@ -2,7 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-type GameId = "menu" | "parkour" | "four-colors" | "geometry-dash";
+type GameId = "menu" | "parkour" | "four-colors" | "geometry-dash" | "chess";
 
 const GAMES = [
   {
@@ -25,6 +25,13 @@ const GAMES = [
     emoji: "🔷",
     desc: "Jump to the beat & dodge obstacles!",
     url: "https://html5.gamedistribution.com/8b65f47d53a6406c8bc767cd1a16a2ec/",
+  },
+  {
+    id: "chess" as const,
+    name: "Chess.com",
+    emoji: "♟️",
+    desc: "Play chess online!",
+    url: "https://www.chess.com/play/online",
   },
 ];
 
@@ -69,6 +76,7 @@ export function GamesTab({ userId }: GamesTabProps) {
   }
 
   const activeGame = GAMES.find(g => g.id === active);
+  const isExternal = activeGame?.url.includes("chess.com");
 
   if (activeGame) {
     return (
@@ -82,26 +90,45 @@ export function GamesTab({ userId }: GamesTabProps) {
         <h3 className="text-xl font-extrabold text-foreground">
           {activeGame.emoji} {activeGame.name}
         </h3>
-        <div className="w-full rounded-2xl overflow-hidden border-2 border-white/20 shadow-lg" style={{ aspectRatio: "16/10" }}>
-          <iframe
-            src={activeGame.url}
-            title={activeGame.name}
-            className="w-full h-full border-0"
-            allow="autoplay; fullscreen; gamepad"
-            sandbox="allow-scripts allow-same-origin allow-popups"
-          />
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Game not loading?{" "}
-          <a
-            href={activeGame.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary underline"
-          >
-            Open in new tab
-          </a>
-        </p>
+        {isExternal ? (
+          <div className="w-full rounded-2xl overflow-hidden border-2 border-white/20 shadow-lg flex items-center justify-center bg-muted" style={{ aspectRatio: "16/10" }}>
+            <div className="text-center p-8">
+              <div className="text-5xl mb-3">♟️</div>
+              <p className="text-sm text-muted-foreground mb-4">{activeGame.desc}</p>
+              <a
+                href={activeGame.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block rounded-lg bg-primary text-primary-foreground font-bold text-sm px-6 py-3 hover:opacity-90 transition"
+              >
+                Play on Chess.com →
+              </a>
+            </div>
+          </div>
+        ) : (
+          <div className="w-full rounded-2xl overflow-hidden border-2 border-white/20 shadow-lg" style={{ aspectRatio: "16/10" }}>
+            <iframe
+              src={activeGame.url}
+              title={activeGame.name}
+              className="w-full h-full border-0"
+              allow="autoplay; fullscreen; gamepad"
+              sandbox="allow-scripts allow-same-origin allow-popups"
+            />
+          </div>
+        )}
+        {!isExternal && (
+          <p className="text-xs text-muted-foreground">
+            Game not loading?{" "}
+            <a
+              href={activeGame.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline"
+            >
+              Open in new tab
+            </a>
+          </p>
+        )}
       </div>
     );
   }
