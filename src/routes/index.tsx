@@ -14,6 +14,7 @@ import { useAuth } from "@/lib/use-auth";
 import { AuthScreen } from "@/components/AuthScreen";
 import { SchoolBoardPicker } from "@/components/SchoolBoardPicker";
 import { endDateForBoard } from "@/lib/school-boards";
+import { useDeviceBan, useRecordDevice } from "@/lib/use-device-ban";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -33,6 +34,22 @@ function Index() {
   const store = useSchoolStore(userId);
   const [tab, setTab] = useState<Tab>("countdown");
   const { isAdmin } = useRoles();
+  const { banned: deviceBanned, checked: banChecked } = useDeviceBan();
+  useRecordDevice(userId);
+
+  if (banChecked && deviceBanned) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="max-w-md text-center rounded-3xl bg-card border border-destructive p-8 shadow-xl">
+          <div className="text-5xl mb-3">🚫</div>
+          <h1 className="text-2xl font-extrabold text-destructive">Device banned</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            This device has been banned from the site by an administrator.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (loading || (session && !store.loaded)) {
     return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Loading…</div>;
