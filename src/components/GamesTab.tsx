@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -42,6 +42,34 @@ export function GamesTab({ userId }: GamesTabProps) {
   const [gameName, setGameName] = useState("");
   const [gameUrl, setGameUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [chessUser, setChessUser] = useState("");
+  const [chessInput, setChessInput] = useState("");
+
+  useEffect(() => {
+    const saved = typeof window !== "undefined" ? localStorage.getItem("chesscom_username") : null;
+    if (saved) {
+      setChessUser(saved);
+      setChessInput(saved);
+    }
+  }, []);
+
+  function saveChessUser(e: React.FormEvent) {
+    e.preventDefault();
+    const u = chessInput.trim().replace(/^@/, "");
+    if (!/^[a-zA-Z0-9_-]{3,25}$/.test(u)) {
+      toast.error("Enter a valid Chess.com username (3–25 letters, numbers, _ or -).");
+      return;
+    }
+    localStorage.setItem("chesscom_username", u);
+    setChessUser(u);
+    toast.success(`Saved! Welcome, ${u} ♟️`);
+  }
+
+  function clearChessUser() {
+    localStorage.removeItem("chesscom_username");
+    setChessUser("");
+    setChessInput("");
+  }
 
   async function submitRecommendation(e: React.FormEvent) {
     e.preventDefault();
@@ -94,15 +122,74 @@ export function GamesTab({ userId }: GamesTabProps) {
           <div className="w-full rounded-2xl overflow-hidden border-2 border-white/20 shadow-lg flex items-center justify-center bg-muted" style={{ aspectRatio: "16/10" }}>
             <div className="text-center p-8">
               <div className="text-5xl mb-3">♟️</div>
-              <p className="text-sm text-muted-foreground mb-4">{activeGame.desc}</p>
-              <a
-                href={activeGame.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block rounded-lg bg-primary text-primary-foreground font-bold text-sm px-6 py-3 hover:opacity-90 transition"
-              >
-                Play on Chess.com →
-              </a>
+              {chessUser ? (
+                <>
+                  <p className="text-sm text-foreground mb-1">
+                    Playing as <span className="font-bold">{chessUser}</span> on Chess.com
+                  </p>
+                  <p className="text-xs text-muted-foreground mb-4">
+                    (Make sure you're logged in to Chess.com in your browser.)
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                    <a
+                      href="https://www.chess.com/play/online"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block rounded-lg bg-primary text-primary-foreground font-bold text-sm px-6 py-3 hover:opacity-90 transition"
+                    >
+                      Play now →
+                    </a>
+                    <a
+                      href={`https://www.chess.com/member/${chessUser}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block rounded-lg bg-muted-foreground/20 text-foreground font-bold text-sm px-6 py-3 hover:opacity-90 transition"
+                    >
+                      My profile
+                    </a>
+                  </div>
+                  <button
+                    onClick={clearChessUser}
+                    className="mt-3 text-xs text-muted-foreground hover:text-foreground underline"
+                  >
+                    Change username
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm text-muted-foreground mb-3">{activeGame.desc}</p>
+                  <form onSubmit={saveChessUser} className="flex flex-col gap-2 max-w-xs mx-auto mb-3">
+                    <label className="text-xs font-bold text-foreground text-left">
+                      Your Chess.com username
+                    </label>
+                    <input
+                      type="text"
+                      value={chessInput}
+                      onChange={e => setChessInput(e.target.value)}
+                      placeholder="e.g. magnuscarlsen"
+                      maxLength={25}
+                      className="rounded-lg bg-background px-3 py-2 text-sm text-foreground border border-white/10 focus:outline-none focus:border-primary"
+                    />
+                    <button
+                      type="submit"
+                      className="rounded-lg bg-primary text-primary-foreground font-bold text-sm py-2 hover:opacity-90 transition"
+                    >
+                      Save & continue
+                    </button>
+                  </form>
+                  <p className="text-xs text-muted-foreground">
+                    Don't have one?{" "}
+                    <a
+                      href="https://www.chess.com/register"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary underline font-bold"
+                    >
+                      Create a free Chess.com account →
+                    </a>
+                  </p>
+                </>
+              )}
             </div>
           </div>
         ) : (
