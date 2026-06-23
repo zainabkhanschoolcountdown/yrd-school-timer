@@ -4,6 +4,7 @@ import type { Json } from "@/integrations/supabase/types";
 import {
   getCurrentSchoolYear,
   getDefaultHolidays,
+  getDefaultHalfDays,
   countSchoolDaysRemaining,
   countTotalSchoolDays,
   type HolidayEntry,
@@ -94,8 +95,9 @@ export function useSchoolStore(userId: string | null) {
   const defaultHolidays = getDefaultHolidays(schoolYear);
   const allHolidays = [...defaultHolidays, ...settings.customHolidays];
   const holidayDates = new Set(allHolidays.map(h => h.date));
-  const daysRemaining = countSchoolDaysRemaining(endDate, holidayDates);
-  const totalDays = countTotalSchoolDays(schoolYear.startDate, endDate, holidayDates);
+  const halfDays = getDefaultHalfDays(schoolYear);
+  const daysRemaining = countSchoolDaysRemaining(endDate, holidayDates, halfDays);
+  const totalDays = countTotalSchoolDays(schoolYear.startDate, endDate, holidayDates, halfDays);
   const daysPassed = totalDays - daysRemaining;
   const progress = totalDays > 0 ? Math.round((daysPassed / totalDays) * 100) : 0;
 

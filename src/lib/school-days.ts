@@ -34,14 +34,28 @@ export function getCurrentSchoolYear(): SchoolYear {
     // Sept (8) through Dec (11): school year is year -> year+1
     return {
       startDate: new Date(year, 8, 1),   // Sept 1
-      endDate: new Date(year + 1, 5, 30), // June 30
+      endDate: getElementaryLastDay(year + 1),
     };
   }
   // Jan through Aug: school year started last year
   return {
     startDate: new Date(year - 1, 8, 1),
-    endDate: new Date(year, 5, 30),
+    endDate: getElementaryLastDay(year),
   };
+}
+
+/** Known YRDSB elementary last-day-of-classes dates. */
+function getElementaryLastDay(endYear: number): Date {
+  // Hardcoded official YRDSB last days. Add new years as they're announced.
+  const known: Record<number, [number, number]> = {
+    2026: [5, 25], // June 25, 2026 (early-release half day)
+  };
+  const k = known[endYear];
+  if (k) return new Date(endYear, k[0], k[1]);
+  // Fallback: last Friday of June
+  const d = new Date(endYear, 5, 30);
+  while (d.getDay() !== 5) d.setDate(d.getDate() - 1);
+  return d;
 }
 
 /**
@@ -50,38 +64,44 @@ export function getCurrentSchoolYear(): SchoolYear {
  */
 export function getDefaultHolidays(schoolYear: SchoolYear): HolidayEntry[] {
   const endYear = schoolYear.endDate.getFullYear();
-  const startYear = schoolYear.startDate.getFullYear();
 
+  // Official YRDSB 2025-2026 Elementary calendar.
+  if (endYear === 2026) {
+    return [
+      { date: "2025-09-01", name: "Labour Day" },
+      { date: "2025-10-13", name: "Thanksgiving Day" },
+      ...generateDateRange("2025-12-22", "2026-01-02").map(d => ({ date: d, name: "Winter Break" })),
+      { date: "2026-02-16", name: "Family Day" },
+      ...generateDateRange("2026-03-16", "2026-03-20").map(d => ({ date: d, name: "March Break" })),
+      { date: "2026-04-03", name: "Good Friday" },
+      { date: "2026-04-06", name: "Easter Monday" },
+      { date: "2026-05-18", name: "Victoria Day" },
+    ];
+  }
+
+  // Generic fallback for other years.
+  const startYear = schoolYear.startDate.getFullYear();
   return [
-    // Thanksgiving (2nd Monday of October)
     { date: `${startYear}-10-14`, name: "Thanksgiving Day" },
-    // PA Days (sample)
-    { date: `${startYear}-10-11`, name: "PA Day" },
-    { date: `${startYear}-11-15`, name: "PA Day" },
-    // Winter Break (Dec 23 - Jan 3 typical)
-    ...generateDateRange(`${startYear}-12-23`, `${endYear}-01-03`).map(d => ({
-      date: d, name: "Winter Break",
-    })),
-    // PA Day after winter break
-    { date: `${endYear}-01-17`, name: "PA Day" },
-    // Family Day (3rd Monday of February)
+    ...generateDateRange(`${startYear}-12-23`, `${endYear}-01-03`).map(d => ({ date: d, name: "Winter Break" })),
     { date: `${endYear}-02-17`, name: "Family Day" },
-    // PA Day
-    { date: `${endYear}-02-14`, name: "PA Day" },
-    // March Break (3rd week of March typically)
-    ...generateDateRange(`${endYear}-03-10`, `${endYear}-03-14`).map(d => ({
-      date: d, name: "March Break",
-    })),
-    // Good Friday (approximate - varies)
+    ...generateDateRange(`${endYear}-03-10`, `${endYear}-03-14`).map(d => ({ date: d, name: "March Break" })),
     { date: `${endYear}-04-18`, name: "Good Friday" },
-    // Easter Monday
     { date: `${endYear}-04-21`, name: "Easter Monday" },
-    // Victoria Day (Monday before May 25)
     { date: `${endYear}-05-19`, name: "Victoria Day" },
-    // PA Days in June
-    { date: `${endYear}-06-06`, name: "PA Day" },
-    { date: `${endYear}-06-27`, name: "PA Day" },
   ];
+}
+
+/**
+ * Set of dates that are early-release / half days.
+ * Counted as 0.5 instead of a full school day.
+ */
+export function getDefaultHalfDays(schoolYear: SchoolYear): Set<string> {
+  const endYear = schoolYear.endDate.getFullYear();
+  if (endYear === 2026) {
+    return new Set(["2026-06-25"]); // Elementary last day, early release
+  }
+  return new Set();
 }
 
 /** Generate an array of date strings between start and end (inclusive). */
@@ -117,6 +137,7 @@ export function isWeekend(date: Date): boolean {
 export function countSchoolDaysRemaining(
   endDate: Date,
   holidayDates: Set<string>,
+  halfDays: Set<string> = new Set(),
 ): number {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -126,12 +147,14 @@ export function countSchoolDaysRemaining(
   const current = new Date(today);
 
   while (current <= endDate) {
-    if (!isWeekend(current) && !holidayDates.has(formatDate(current))) {
-      count++;
+    const key = formatDate(current);
+    if (!isWeekend(current) && !holidayDates.has(key)) {
+      count += halfDays.has(key) ? 0.5 : 1;
     }
     current.setDate(current.getDate() + 1);
   }
-  return count;
+  // Round to nearest 0.5 to avoid floating-point dust
+  return Math.round(count * 2) / 2;
 }
 
 /**
@@ -141,16 +164,18 @@ export function countTotalSchoolDays(
   startDate: Date,
   endDate: Date,
   holidayDates: Set<string>,
+  halfDays: Set<string> = new Set(),
 ): number {
   let count = 0;
   const current = new Date(startDate);
   while (current <= endDate) {
-    if (!isWeekend(current) && !holidayDates.has(formatDate(current))) {
-      count++;
+    const key = formatDate(current);
+    if (!isWeekend(current) && !holidayDates.has(key)) {
+      count += halfDays.has(key) ? 0.5 : 1;
     }
     current.setDate(current.getDate() + 1);
   }
-  return count;
+  return Math.round(count * 2) / 2;
 }
 
 /**
