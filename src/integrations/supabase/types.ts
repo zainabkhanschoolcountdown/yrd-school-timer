@@ -170,18 +170,21 @@ export type Database = {
           emoji: string
           id: string
           label: string
+          url: string | null
         }
         Insert: {
           created_at?: string
           emoji?: string
           id?: string
           label: string
+          url?: string | null
         }
         Update: {
           created_at?: string
           emoji?: string
           id?: string
           label?: string
+          url?: string | null
         }
         Relationships: []
       }
