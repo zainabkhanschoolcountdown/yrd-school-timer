@@ -5,6 +5,7 @@ export interface Widget {
   id: string;
   label: string;
   emoji: string;
+  url: string | null;
 }
 
 export function useWidgets() {
@@ -14,7 +15,7 @@ export function useWidgets() {
   const refresh = useCallback(async () => {
     const { data } = await supabase
       .from("widgets")
-      .select("id, label, emoji")
+      .select("id, label, emoji, url")
       .order("created_at", { ascending: true });
     if (data) setWidgets(data);
     setLoading(false);
@@ -31,10 +32,13 @@ export function useWidgets() {
     };
   }, [refresh]);
 
-  const addWidget = useCallback(async (label: string, emoji: string) => {
+  const addWidget = useCallback(async (label: string, emoji: string, url: string) => {
     const l = label.trim();
-    if (!l) return;
-    await supabase.from("widgets").insert({ label: l, emoji: emoji || "⭐" });
+    const u = url.trim();
+    if (!l || !u) return;
+    let normalized = u;
+    if (!/^https?:\/\//i.test(normalized)) normalized = `https://${normalized}`;
+    await supabase.from("widgets").insert({ label: l, emoji: emoji || "⭐", url: normalized });
   }, []);
 
   const removeWidget = useCallback(async (id: string) => {
