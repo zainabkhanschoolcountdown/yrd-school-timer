@@ -9,6 +9,7 @@ import {
   countTotalSchoolDays,
   type HolidayEntry,
 } from "./school-days";
+import { SCHOOL_BOARDS } from "./school-boards";
 import { type AvatarConfig, DEFAULT_AVATAR } from "./avatar";
 
 interface UserSettings {
@@ -89,9 +90,17 @@ export function useSchoolStore(userId: string | null) {
     supabase.from("profiles").update(payload).eq("user_id", userId).then(() => {});
   }, [settings, userId, loaded]);
 
+  // Default end date depends on the user's chosen school board.
+  // If they set a custom date, that always wins.
+  const board = settings.schoolBoard
+    ? SCHOOL_BOARDS.find(b => b.id === settings.schoolBoard)
+    : undefined;
+  const boardEndDate = board
+    ? new Date(schoolYear.endDate.getFullYear(), board.endMonth - 1, board.endDay)
+    : schoolYear.endDate;
   const endDate = settings.customEndDate
     ? new Date(settings.customEndDate + "T00:00:00")
-    : schoolYear.endDate;
+    : boardEndDate;
   const defaultHolidays = getDefaultHolidays(schoolYear);
   const allHolidays = [...defaultHolidays, ...settings.customHolidays];
   const holidayDates = new Set(allHolidays.map(h => h.date));
