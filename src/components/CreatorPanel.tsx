@@ -15,6 +15,7 @@ export function CreatorPanel() {
   const [banName, setBanName] = useState("");
   const [newWidget, setNewWidget] = useState("");
   const [newEmoji, setNewEmoji] = useState("⭐");
+  const [newUrl, setNewUrl] = useState("");
 
   const promoteAdmin = async () => {
     const n = searchName.trim();
@@ -131,9 +132,10 @@ export function CreatorPanel() {
           <LayoutGrid size={20} /> Manage Widgets
         </h3>
         <p className="text-xs text-muted-foreground">
-          Widgets show up on everyone's Countdown tab.
+          Widgets show up on everyone's Countdown tab as clickable link cards.
         </p>
-        <div className="flex gap-2">
+        <div className="space-y-2">
+         <div className="flex gap-2">
           <input
             type="text"
             placeholder="Emoji"
@@ -146,34 +148,51 @@ export function CreatorPanel() {
             placeholder="Widget name"
             value={newWidget}
             onChange={(e) => setNewWidget(e.target.value)}
+            className="flex-1 rounded-xl border bg-card px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+         </div>
+         <div className="flex gap-2">
+          <input
+            type="url"
+            placeholder="https://example.com"
+            value={newUrl}
+            onChange={(e) => setNewUrl(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                addWidget(newWidget, newEmoji);
+                addWidget(newWidget, newEmoji, newUrl);
                 setNewWidget("");
                 setNewEmoji("⭐");
+                setNewUrl("");
               }
             }}
             className="flex-1 rounded-xl border bg-card px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           />
-          <Button
+         <Button
             onClick={() => {
-              addWidget(newWidget, newEmoji);
+              addWidget(newWidget, newEmoji, newUrl);
               setNewWidget("");
               setNewEmoji("⭐");
+              setNewUrl("");
             }}
             className="rounded-xl"
           >
             <Plus size={18} />
           </Button>
+         </div>
         </div>
         {widgets.length > 0 ? (
           <ul className="space-y-2">
             {widgets.map((w) => (
               <li key={w.id} className="flex items-center justify-between rounded-xl bg-muted px-4 py-3">
-                <span className="text-sm font-medium">
-                  <span className="mr-2 text-lg">{w.emoji}</span>
-                  {w.label}
-                </span>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-sm font-medium truncate">
+                    <span className="mr-2 text-lg">{w.emoji}</span>
+                    {w.label}
+                  </span>
+                  {w.url && (
+                    <span className="text-xs text-muted-foreground truncate">{w.url}</span>
+                  )}
+                </div>
                 <button onClick={() => removeWidget(w.id)} className="text-destructive hover:text-destructive/80">
                   <X size={16} />
                 </button>
