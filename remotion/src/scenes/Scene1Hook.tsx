@@ -50,21 +50,21 @@ export const Scene1Hook: React.FC = () => {
         <div
           style={{
             position: "absolute",
-            right: 180,
-            bottom: 130 + bob,
+            right: 120,
+            bottom: 80 + bob,
             transform: `rotate(-4deg)`,
             background: C.bgSoft,
             border: `4px solid ${C.pink}`,
-            borderRadius: 28,
-            padding: "30px 50px",
+            borderRadius: 24,
+            padding: "22px 36px",
             boxShadow: `12px 12px 0 ${C.pink}`,
             opacity: interpolate(frame, [10, 30], [0, 1], { extrapolateRight: "clamp" }),
           }}
         >
-          <div style={{ fontFamily: body, fontWeight: 600, fontSize: 28, color: C.chalk, opacity: 0.7 }}>
+          <div style={{ fontFamily: body, fontWeight: 600, fontSize: 22, color: C.chalk, opacity: 0.7, letterSpacing: 2 }}>
             DAYS LEFT
           </div>
-          <div style={{ fontFamily: display, fontSize: 180, color: C.pink, lineHeight: 1 }}>
+          <div style={{ fontFamily: display, fontSize: 120, color: C.pink, lineHeight: 1 }}>
             {tick}.{half}
           </div>
         </div>
