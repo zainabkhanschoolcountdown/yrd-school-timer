@@ -32,7 +32,7 @@ export const Scene2Logo: React.FC = () => {
             boxShadow: `10px 10px 0 ${C.pink}`,
           }}
         >
-          ★ YRDSB EDITION ★
+          ★ STUDENT EDITION ★
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <div
