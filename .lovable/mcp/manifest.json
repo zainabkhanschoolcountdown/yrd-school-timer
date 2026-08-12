@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.2",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://zzxqyvvbfhwewunlozvk.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "school-countdown-timer",
+      "version": "0.1.0",
+      "title": "School Countdown Timer"
+    },
+    "tools": [
+      {
+        "name": "get_countdown",
+        "title": "Get school day countdown",
+        "description": "Get how many school days are left until the last day of school for the signed-in student, using their saved end date and custom days off.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_profile",
+        "title": "Get my profile",
+        "description": "Get the signed-in user's profile: username, grade, school board, sound setting and avatar.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_chat_messages",
+        "title": "List chat messages",
+        "description": "Read the most recent messages from the app's live chat room.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "default": 25,
+              "description": "How many recent messages to return.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "post_chat_message",
+        "title": "Post a chat message",
+        "description": "Post a message to the app's live chat as the signed-in user. Swear words are automatically censored.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300,
+              "description": "The message to send (max 300 characters)."
+            }
+          },
+          "required": [
+            "text"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "recommend_game",
+        "title": "Recommend a game",
+        "description": "Submit a game recommendation for the app's creator and admins to review.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "game_name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80,
+              "description": "Name of the game to recommend."
+            },
+            "game_url": {
+              "description": "Optional link to the game.",
+              "type": "string",
+              "maxLength": 500,
+              "format": "uri"
+            }
+          },
+          "required": [
+            "game_name"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
