@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthScreen } from "@/components/AuthScreen";
 import { useAuth } from "@/lib/use-auth";
@@ -61,9 +61,11 @@ function Consent({ authorizationId }: { authorizationId: string }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!ready) {
-    void (async () => {
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
       const { data, error: err } = await oauth().getAuthorizationDetails(authorizationId);
+      if (cancelled) return;
       if (err) setError(err.message);
       const immediate = data?.redirect_url ?? data?.redirect_to;
       if (immediate && !data?.client) {
@@ -73,7 +75,11 @@ function Consent({ authorizationId }: { authorizationId: string }) {
       setDetails(data);
       setReady(true);
     })();
-    return <Shell><p className="text-sm text-muted-foreground">Loading request…</p></Shell>;
+    return () => { cancelled = true; };
+  }, [authorizationId]);
+
+  if (!ready) {
+    return <Shell><p className="text-sm text-muted-foreground">{error ?? "Loading request…"}</p></Shell>;
   }
 
   const clientName = details?.client?.name ?? "an app";
