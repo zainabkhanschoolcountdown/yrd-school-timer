@@ -21,8 +21,8 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "YRDSB School Countdown 🎒" },
-      { name: "description", content: "Count down the remaining school days for YRDSB elementary schools!" },
+      { title: "School Day Countdown 🎒" },
+      { name: "description", content: "Count down the remaining school days until summer break for your school board!" },
     ],
   }),
 });
@@ -99,7 +99,7 @@ function Index() {
             <RoleBadge role={isCreator ? "creator" : "admin"} size={14} />
           </div>
         )}
-        <p className="text-white/70 mt-1 text-sm">YRDSB Elementary</p>
+        <p className="text-white/70 mt-1 text-sm">Elementary &amp; Middle School</p>
       </header>
 
       {/* Tab bar */}
@@ -197,7 +197,7 @@ function Index() {
 
       {/* Footer */}
       <footer className="text-center py-4 text-xs text-white/60 space-y-1">
-        <p>Made with 💚 for YRDSB students</p>
+        <p>Made with 💚 for students</p>
         <p className="font-bold text-white/80">Created by mountfuji 🏔️</p>
       </footer>
     </div>

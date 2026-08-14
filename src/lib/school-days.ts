@@ -1,9 +1,9 @@
 /**
- * School Days Calculator for YRDSB (York Region District School Board)
+ * School Days Calculator
  *
  * How it works:
  * 1. We define a school year range (Sept 1 to June 30 by default).
- * 2. We preload known YRDSB holidays and PA days for the current school year.
+ * 2. We preload common holidays and PA days for the current school year.
  * 3. To count remaining school days, we iterate from today to the last day,
  *    skipping weekends (Saturday=6, Sunday=0) and any dates in the holidays set.
  * 4. Users can add/remove custom non-school days which get merged into the set.
@@ -44,9 +44,9 @@ export function getCurrentSchoolYear(): SchoolYear {
   };
 }
 
-/** Known YRDSB elementary last-day-of-classes dates. */
+/** Known elementary last-day-of-classes dates. */
 function getElementaryLastDay(endYear: number): Date {
-  // Hardcoded official YRDSB last days. Add new years as they're announced.
+  // Hardcoded official last days. Add new years as they're announced.
   const known: Record<number, [number, number]> = {
     2026: [5, 25], // June 25, 2026 (early-release half day)
   };
@@ -59,13 +59,13 @@ function getElementaryLastDay(endYear: number): Date {
 }
 
 /**
- * Preloaded YRDSB holidays and PA days.
+ * Preloaded holidays and PA days.
  * These are typical dates; actual dates may vary year to year.
  */
 export function getDefaultHolidays(schoolYear: SchoolYear): HolidayEntry[] {
   const endYear = schoolYear.endDate.getFullYear();
 
-  // Official YRDSB 2025-2026 Elementary calendar.
+  // Official 2025-2026 Ontario elementary calendar.
   if (endYear === 2026) {
     return [
       { date: "2025-09-01", name: "Labour Day" },
