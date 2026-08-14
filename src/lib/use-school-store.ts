@@ -9,7 +9,7 @@ import {
   countTotalSchoolDays,
   type HolidayEntry,
 } from "./school-days";
-import { SCHOOL_BOARDS } from "./school-boards";
+import { SCHOOL_BOARDS, firstDayForBoard, daysBetween } from "./school-boards";
 import { type AvatarConfig, DEFAULT_AVATAR } from "./avatar";
 
 interface UserSettings {
@@ -110,6 +110,20 @@ export function useSchoolStore(userId: string | null) {
   const daysPassed = totalDays - daysRemaining;
   const progress = totalDays > 0 ? Math.round((daysPassed / totalDays) * 100) : 0;
 
+  // ===== Summer break =====
+  // Once the last day of school has passed, we count down the summer instead:
+  // from the board's last day to the board's first day of the next school year.
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const nextFirstDay = firstDayForBoard(board, endDate.getFullYear());
+  const isSummer = today > endDate && today < nextFirstDay;
+  const summerDaysLeft = Math.max(0, daysBetween(today, nextFirstDay));
+  const summerTotalDays = Math.max(1, daysBetween(endDate, nextFirstDay));
+  const summerProgress = Math.min(
+    100,
+    Math.max(0, Math.round(((summerTotalDays - summerDaysLeft) / summerTotalDays) * 100)),
+  );
+
   const updateSettings = useCallback((patch: Partial<UserSettings>) => {
     setSettings(prev => ({ ...prev, ...patch }));
   }, []);
@@ -135,6 +149,11 @@ export function useSchoolStore(userId: string | null) {
     totalDays,
     daysPassed,
     progress,
+    isSummer,
+    summerDaysLeft,
+    summerTotalDays,
+    summerProgress,
+    firstDayOfSchool: nextFirstDay,
     loaded,
   };
 }

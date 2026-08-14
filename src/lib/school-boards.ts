@@ -6,6 +6,10 @@ export type SchoolBoard = {
   // School year end date as month/day (last day of classes, approximate)
   endMonth: number; // 1-12
   endDay: number;
+  // Optional first day of the next school year (month/day). When missing we
+  // fall back to a country-typical first day (see firstDayForBoard).
+  startMonth?: number; // 1-12
+  startDay?: number;
 };
 
 // Canadian school boards (representative coverage across provinces).
@@ -196,4 +200,39 @@ export function endDateForBoard(board: SchoolBoard, schoolYearEnd: Date): string
   const mm = String(board.endMonth).padStart(2, "0");
   const dd = String(board.endDay).padStart(2, "0");
   return `${year}-${mm}-${dd}`;
+}
+
+/** First Monday of a month (0-indexed month). */
+function firstMonday(year: number, month: number): Date {
+  const d = new Date(year, month, 1);
+  while (d.getDay() !== 1) d.setDate(d.getDate() + 1);
+  return d;
+}
+
+/**
+ * First day of school for a board in a given calendar year.
+ * Boards can declare startMonth/startDay; otherwise we use the typical pattern:
+ *  - Canada: the Tuesday after Labour Day (first Monday of September).
+ *  - USA: the fourth Monday of August.
+ */
+export function firstDayForBoard(board: SchoolBoard | undefined, year: number): Date {
+  if (board?.startMonth && board?.startDay) {
+    return new Date(year, board.startMonth - 1, board.startDay);
+  }
+  if (board?.country === "USA") {
+    const d = firstMonday(year, 7); // August
+    d.setDate(d.getDate() + 21); // fourth Monday
+    return d;
+  }
+  const labourDay = firstMonday(year, 8); // September
+  const d = new Date(labourDay);
+  d.setDate(d.getDate() + 1); // Tuesday after Labour Day
+  return d;
+}
+
+/** Whole calendar days between two dates (b - a), ignoring time of day. */
+export function daysBetween(a: Date, b: Date): number {
+  const x = new Date(a.getFullYear(), a.getMonth(), a.getDate()).getTime();
+  const y = new Date(b.getFullYear(), b.getMonth(), b.getDate()).getTime();
+  return Math.round((y - x) / 86400000);
 }

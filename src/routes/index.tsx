@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useSchoolStore } from "@/lib/use-school-store";
 import { CountdownDisplay } from "@/components/CountdownDisplay";
+import { SummerCountdown } from "@/components/SummerCountdown";
 import { SettingsPanel } from "@/components/SettingsPanel";
 import { CreatorPanel } from "@/components/CreatorPanel";
 import { GameRecommendationsList } from "@/components/GameRecommendationsList";
@@ -150,15 +151,26 @@ function Index() {
         <div className="rounded-3xl bg-card shadow-xl border p-6 md:p-10">
           {tab === "countdown" && (
             <>
-            <CountdownDisplay
-              daysRemaining={store.daysRemaining}
-              progress={store.progress}
-              totalDays={store.totalDays}
-              daysPassed={store.daysPassed}
-              name={store.settings.name}
-              grade={store.settings.grade}
-              soundEnabled={store.settings.soundEnabled}
-            />
+            {store.isSummer ? (
+              <SummerCountdown
+                daysLeft={store.summerDaysLeft}
+                totalDays={store.summerTotalDays}
+                progress={store.summerProgress}
+                firstDayOfSchool={store.firstDayOfSchool}
+                lastDayOfSchool={store.endDate}
+                name={store.settings.name}
+              />
+            ) : (
+              <CountdownDisplay
+                daysRemaining={store.daysRemaining}
+                progress={store.progress}
+                totalDays={store.totalDays}
+                daysPassed={store.daysPassed}
+                name={store.settings.name}
+                grade={store.settings.grade}
+                soundEnabled={store.settings.soundEnabled}
+              />
+            )}
             <WidgetStrip />
             </>
           )}
