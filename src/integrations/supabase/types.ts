@@ -146,6 +146,42 @@ export type Database = {
         }
         Relationships: []
       }
+      study_plans: {
+        Row: {
+          created_at: string
+          days_per_week: number
+          goal: string
+          id: string
+          minutes_per_day: number
+          plan: Json
+          subjects: string[]
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          days_per_week?: number
+          goal?: string
+          id?: string
+          minutes_per_day?: number
+          plan?: Json
+          subjects?: string[]
+          title?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          days_per_week?: number
+          goal?: string
+          id?: string
+          minutes_per_day?: number
+          plan?: Json
+          subjects?: string[]
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
